@@ -14,20 +14,17 @@ $query = $pdo->prepare("INSERT INTO `my_db`.`users`"
         "VALUES(:email, :password, :full_name, :age, :gender, :photo)");
 
 $data = [
-    'email' => 'lohatronas@gmail.com',
-    'password' => 'qwer1234',
-    'full_name' => 'lohas lohauskas',
-    'age' => 12,
-    'gender' => 'f',
-    'photo' => 'loh.jpg'
+    'email' => 'augis@gmail.com',
+    'password' => 'deasfds',
+    'full_name' => 'augis papa',
+    'age' => 2,
+    'gender' => 'm',
+    'photo' => 'augis.jpg'
 ];
 
-$query->bindParam(':email', $data['email'], PDO::PARAM_STR);
-$query->bindParam(':password', $data['password'], PDO::PARAM_STR);
-$query->bindParam(':full_name', $data['full_name'], PDO::PARAM_STR);
-$query->bindParam(':age', $data['age'], PDO::PARAM_INT);
-$query->bindParam(':gender', $data['gender'], PDO::PARAM_STR);
-$query->bindParam(':photo', $data['photo'], PDO::PARAM_STR);
+foreach ($data as $key => &$value) {
+    $query->bindParam(':' . $key, $value);
+}
 
 $query->execute();
 
