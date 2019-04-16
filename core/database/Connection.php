@@ -1,12 +1,17 @@
 <?php
 
-namespace Core;
+namespace Core\Database;
 
 use PDO;
 
-class Connection extends Database\Abstracts\Connection {
-
+class Connection extends Core\Database\Abstracts\Connection {
+    protected $creds;
+    
     public function __construct($creds) {
+        $this->setCredentials($creds);
+    }
+
+    public function connect() {
         try {
             $this->pdo = new PDO(
                     "mysql:host=$this->host", $this->user, $this->pass
@@ -16,13 +21,9 @@ class Connection extends Database\Abstracts\Connection {
                 $this->pdo->setAttribute(PDO::ATTR_EMULATE, PDO::ERRMODE_EXCEPTION);
                 $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
             }
-        } catch (\PDOException $ex) {
+        } catch (\PDOException $e) {
             throw new Exception('Could not connect to database');
         }
-    }
-
-    public function connect() {
-        
     }
 
 }
