@@ -4,9 +4,8 @@ namespace Core\Database;
 
 use PDO;
 
-class Connection extends Core\Database\Abstracts\Connection {
+class Connection extends \Core\Database\Abstracts\Connection {
 
-    protected $creds;
 
     public function __construct($creds) {
         $this->setCredentials($creds);
@@ -20,11 +19,11 @@ class Connection extends Core\Database\Abstracts\Connection {
                 );
 
                 if (DEBUG) {
-                    $this->pdo->setAttribute(PDO::ATTR_EMULATE, PDO::ERRMODE_EXCEPTION);
+                    $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
                 }
             } catch (\PDOException $e) {
-                throw new Exception('Could not connect to database');
+                throw new \PDOException('Could not connect to database');
             }
         }
     }
