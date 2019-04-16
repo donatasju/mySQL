@@ -8,5 +8,7 @@ $db = new \Core\Database\Connection([
     'password' => '12345'
 ]);
 
-$db->connect();
+$pdo = $db->getPDO();
+$pdo->exec("INSERT INTO `my_db`.`users`(`email`, `password`, `full_name`, `age`, `gender`, `photo`)" . 
+        "VALUES('donatas.jurkusl@gmail.com', '12345', 'Donatas Jurkus', '23', 'm', 'dick.jpg')");
 
