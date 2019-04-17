@@ -29,8 +29,8 @@ $pdo = $db->getPDO();
 
 $query = $pdo->query("SELECT * FROM `my_db`.`users`");
 $data = $query->fetchAll(PDO::FETCH_ASSOC);
-?>
 
+?>
 <html>
     <head>
         <title>DB</title>
