@@ -8,27 +8,26 @@ $db = new \Core\Database\Connection([
         ]);
 
 $pdo = $db->getPDO();
-//$query = $pdo->prepare("INSERT INTO `my_db`.`users`"
-//        . "(`email`, `password`, `full_name`, `age`, `gender`, `photo`)" .
-//        "VALUES(:email, :password, :full_name, :age, :gender, :photo)");
-//
-//$data = [
-//    'email' => 'augis@gmail.com',
-//    'password' => 'deasfds',
-//    'full_name' => 'augis papa',
-//    'age' => 2,
-//    'gender' => 'm',
-//    'photo' => 'augis.jpg'
-//];
-//
-//foreach ($data as $key => &$value) {
-//    $query->bindParam(':' . $key, $value);
-//}
-//
-//$query->execute();
-
 $query = $pdo->query("SELECT * FROM `my_db`.`users`");
-$data = $query->fetchAll(PDO::FETCH_ASSOC);
+$last_gender = '';
+$users = [];
+
+while ($row = $query->fetch(PDO::FETCH_LAZY)) {
+    $gender = $row['gender'];
+
+    if ($gender == $last_gender && $gender == 'f') {
+        break;
+    } else {
+        $last_gender = $gender;
+        $users[] = [
+            'email' => $row['email'],
+            'full_name' => $row['full_name'],
+            'age' => $row['age'],
+            'gender' => $row['gender'],
+            'photo' => $row['photo'],
+        ];
+    }
+}
 
 ?>
 <html>
@@ -36,15 +35,13 @@ $data = $query->fetchAll(PDO::FETCH_ASSOC);
         <title>DB</title>
     </head>
     <body>
-        <?php foreach ($data as $row): ?>
+        <?php foreach ($users as $user): ?>
             <ul>
-                <li>Email: <?php print $row['email']; ?></li>
-                <li>Password: <?php print $row['password']; ?></li>
-                <li>Full Name: <?php print $row['full_name']; ?></li>
-                <li>Age: <?php print $row['age']; ?></li>
-                <li>Gender: <?php print $row['gender']; ?></li>
-                <li>Created at: <?php print $row['created_at']; ?></li>
-                <li>Updated at: <?php print $row['updated_at']; ?></li>
+                <li><?php print $user['email']; ?></li>
+                <li><?php print $user['full_name']; ?></li>
+                <li><?php print $user['age']; ?></li>
+                <li><?php print $user['gender']; ?></li>
+                <li><?php print $user['photo']; ?></li>
             </ul>
         <?php endforeach; ?>
     </body>
