@@ -12,19 +12,18 @@ $db = new \Core\Database\Connection([
 $pdo = $db->getPDO();
 
 
-$sql = strtr("SELECT * FROM @db.@table WHERE (@gender = @genderValue) AND (@age = @ageValue)", [
+$sql = strtr("UPDATE @db.@table SET @gender = @genderValue, @age = @ageValue", [
             '@db' => SQLBuilder::schema('my_db'),
             '@table' => SQLBuilder::table('users'),
             '@gender' => SQLBuilder::column('gender'),
             '@age' => SQLBuilder::column('age'),
-            '@genderValue' => SQLBuilder::value('f'),
-            '@ageValue' => SQLBuilder::value(23),
+            '@genderValue' => SQLBuilder::value('m'),
+            '@ageValue' => SQLBuilder::value(rand(1, 99)),
             
         ]);
 
-$query = $pdo->query($sql);
-$data = $query->fetchAll(PDO::FETCH_ASSOC);
-var_dump($data);
+$pdo->exec($sql);
+var_dump($sql);
 
 
 
