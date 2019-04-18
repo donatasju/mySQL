@@ -11,14 +11,20 @@ $db = new \Core\Database\Connection([
 
 $pdo = $db->getPDO();
 
+$row = [
+    'email' => 'fokacija@gmail.com',
+    'password' => '123456',
+    'full_name' => 'Augis Raugis',
+    'gender' => 'f',
+    'age' => 23,
+    'photo' => 'augis.jpg'
+];
 
-$sql = strtr("UPDATE @db.@table SET @gender = @genderValue, @age = @ageValue", [
+$sql = strtr("INSERT INTO @db.@table (@columns) VALUES (@values)", [
             '@db' => SQLBuilder::schema('my_db'),
             '@table' => SQLBuilder::table('users'),
-            '@gender' => SQLBuilder::column('gender'),
-            '@age' => SQLBuilder::column('age'),
-            '@genderValue' => SQLBuilder::value('m'),
-            '@ageValue' => SQLBuilder::value(rand(1, 99)),
+            '@columns' => SQLBuilder::columns(array_keys($row)),
+            '@values' => SQLBuilder::values(array_values($row)),
             
         ]);
 
