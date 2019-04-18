@@ -12,24 +12,32 @@ $db = new \Core\Database\Connection([
 $pdo = $db->getPDO();
 
 $row = [
-    'email' => 'fokacija@gmail.com',
-    'password' => '123456',
-    'full_name' => 'Augis Raugis',
-    'gender' => 'f',
-    'age' => 23,
-    'photo' => 'augis.jpg'
+    'email' => 'fokacija2334@gmail.com',
+    'password' => '123456444',
+    'full_name' => 'Augis Raugis9000',
+    'gender' => 'm',
+    'age' => 24,
+    'photo' => 'augis2.jpg'
 ];
 
 $sql = strtr("INSERT INTO @db.@table (@columns) VALUES (@values)", [
             '@db' => SQLBuilder::schema('my_db'),
             '@table' => SQLBuilder::table('users'),
             '@columns' => SQLBuilder::columns(array_keys($row)),
-            '@values' => SQLBuilder::values(array_values($row)),
+            '@values' => SQLBuilder::binds(array_keys($row)),
             
         ]);
 
-$pdo->exec($sql);
-var_dump($sql);
+$query = $pdo->prepare($sql);
+
+foreach($row as $key => &$value) {
+
+    $query->bindValue(SQLBuilder::bind($key), $value);
+}
+
+$query->execute();
+
+
 
 
 
