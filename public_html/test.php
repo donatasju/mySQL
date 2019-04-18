@@ -1,6 +1,8 @@
 <?php
 require_once '../bootloader.php';
 
+use Core\Database\SQLBuilder;
+
 $db = new \Core\Database\Connection([
     'host' => 'localhost',
     'user' => 'root',
@@ -8,45 +10,21 @@ $db = new \Core\Database\Connection([
         ]);
 
 $pdo = $db->getPDO();
-$query = $pdo->query("SELECT * FROM `my_db`.`users`");
-$last_gender = '';
-$users = [];
 
-while ($row = $query->fetch(PDO::FETCH_LAZY)) {
-    $gender = $row['gender'];
 
-    if ($gender == $last_gender && $gender == 'f') {
-        break;
-    } else {
-        $last_gender = $gender;
-        $users[] = [
-            'email' => $row['email'],
-            'full_name' => $row['full_name'],
-            'age' => $row['age'],
-            'gender' => $row['gender'],
-            'photo' => $row['photo'],
-        ];
-    }
-}
+$sql = strtr("SELECT * FROM @db.@table WHERE (@gender = @genderValue) AND (@age = @ageValue)", [
+            '@db' => SQLBuilder::schema('my_db'),
+            '@table' => SQLBuilder::table('users'),
+            '@gender' => SQLBuilder::column('gender'),
+            '@age' => SQLBuilder::column('age'),
+            '@genderValue' => SQLBuilder::value('f'),
+            '@ageValue' => SQLBuilder::value(23),
+            
+        ]);
 
-?>
-<html>
-    <head>
-        <title>DB</title>
-    </head>
-    <body>
-        <?php foreach ($users as $user): ?>
-            <ul>
-                <li><?php print $user['email']; ?></li>
-                <li><?php print $user['full_name']; ?></li>
-                <li><?php print $user['age']; ?></li>
-                <li><?php print $user['gender']; ?></li>
-                <li><?php print $user['photo']; ?></li>
-            </ul>
-        <?php endforeach; ?>
-    </body>
-</html>
-
+$query = $pdo->query($sql);
+$data = $query->fetchAll(PDO::FETCH_ASSOC);
+var_dump($data);
 
 
 
